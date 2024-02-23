@@ -12,6 +12,7 @@ import {
 	TableCaption,
 	ButtonExp
 } from '@/components/ui/table';
+import supabase from '@/db';
 
 export interface Inventario {
 	id: number;
@@ -21,9 +22,14 @@ export interface Inventario {
 }
 
 async function getInventario() {
-	const res = await fetch('http://localhost:3001/galletas');
-	const inventario = await res.json();
-	return inventario as Promise<Inventario[]>;
+	const { data, error } = await supabase.from('galletas').select('*');
+
+	if (error) {
+		console.error(error);
+		return [];
+	}
+	console.log(data);
+	return data;
 }
 
 const inventario = await getInventario();

@@ -1,3 +1,4 @@
+import supabase from '@/db';
 import {
 	isAfter,
 	isBefore,
@@ -27,33 +28,35 @@ export interface VentaData2 {
 	id: number;
 }
 
-export const fetchData = async (): Promise<VentaData[]> => {
-	const response = await fetch('http://localhost:3001/venta');
-	const data: VentaData[] = await response.json();
+export const fetchData = async () => {
+	const { data, error } = await supabase.from('venta').select('*');
+	if (error) {
+		throw new Error('Error al obtener las ventas');
+	}
 	return data;
 };
 
 export const filterDataByDate = (
-	data: VentaData[],
+	data: any,
 	date: string,
 	today: Date
 ): VentaData[] => {
 	switch (date) {
 		case 'hoy':
-			return data.filter(element =>
+			return data.filter((element: any) =>
 				isSameDay(new Date(element.fecha), today)
 			);
 
 		case 'semana':
 			const oneWeekAgo = subWeeks(today, 1);
-			return data.filter(element => {
+			return data.filter((element: any) => {
 				const fecha = new Date(element.fecha);
 				return isAfter(fecha, oneWeekAgo) && isBefore(fecha, today);
 			});
 
 		case 'mes':
 			const oneMonthAgo = subMonths(today, 1);
-			return data.filter(element => {
+			return data.filter((element: any) => {
 				const fecha = new Date(element.fecha);
 				return isAfter(fecha, oneMonthAgo) && isBefore(fecha, today);
 			});

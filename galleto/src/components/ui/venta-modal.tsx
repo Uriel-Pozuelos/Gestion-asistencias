@@ -15,20 +15,25 @@ import { useFormState } from '@/store/useFormState';
 import { jsPDF } from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import { format } from 'date-fns';
+import supabase from '@/db';
 
 async function saveVenta(galleta: any) {
 	galleta.fecha = new Date().toISOString();
+
+	galleta.precioventa = Number(galleta.precioVenta);
+	galleta.typeventa = galleta.typeVenta;
 	//quitar el id
 	delete galleta.id;
+	delete galleta.precioVenta;
+	delete galleta.typeVenta;
+	const { data, error } = await supabase
+		.from('venta')
+		.insert([galleta]);
 
-	const response = await fetch('http://localhost:3001/venta', {
-		method: 'POST',
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(galleta)
-	});
-	const data = await response.json();
+	if (error) {
+		throw new Error('Ocurrió un error al guardar la venta');
+	}
+
 	return data;
 }
 
@@ -104,45 +109,66 @@ function ModalCompra({ pathname }: ModalCompraProps) {
 		try {
 			// Utilizar map para obtener un array de promesas
 			const promises = listaGalletas.map(async galleta => {
-				const url = `http://localhost:3001/galletas?id=${galleta.id}`;
-				const urlWithParams = new URL(url);
+				const { data: g } = await supabase
+					.from('galletas')
+					.select('*')
+					.eq('id', galleta.id);
 
-				const resp = await fetch(urlWithParams);
-				let g = await resp.json();
+				// Verificar si hay suficiente stock
 
-				if (Number(g[0].stock) < Number(galleta.cantidad)) {
-					toast({
-						title: 'Error',
-						description: `No hay suficiente stock de ${g[0].nombre}`,
-						variant: 'destructive'
-					});
-					return Promise.reject(
-						`No hay suficiente stock de ${g[0].nombre}`
+				let newCantidad = 0;
+
+				if (g && g.length > 0) {
+					newCantidad = (g[0].stock || 0) - Number(galleta.cantidad);
+
+					g[0].stock = newCantidad;
+
+					const { data: dataResponse, error } = await supabase
+						.from('galletas')
+						.update(g[0])
+						.eq('id', galleta.id);
+
+					const data = await saveVenta(galleta);
+					console.log({ data });
+
+					if (error) {
+						toast({
+							title: 'Error',
+							description: `Ocurrio un error al actualizar la galleta`,
+							variant: 'destructive'
+						});
+					} else {
+						toast({
+							title: 'Galleta actualizada',
+							description: `Se actualizo la cantidad de ${galleta.nombre} con éxito`
+						});
+					}
+
+					return data;
+				} else {
+					// Aquí puedes manejar el caso en el que no se encontró ninguna galleta con el ID
+					console.log(
+						'No se encontró ninguna galleta con el ID:',
+						galleta.id
 					);
 				}
 
-				const newCantidad = g[0].stock - Number(galleta.cantidad);
-				g[0].stock = newCantidad;
-
-				const response = await fetch(
-					`http://localhost:3001/galletas/${galleta.id}`,
-					{
-						method: 'PUT',
-						headers: {
-							'Content-Type': 'application/json'
-						},
-						body: JSON.stringify(g[0])
-					}
-				);
-
-				const data = await saveVenta(galleta);
-				console.log({ data });
-
-				return data;
+				if (newCantidad < 0) {
+					toast({
+						title: 'Error',
+						description: `No hay suficiente stock de ${galleta.nombre}`,
+						variant: 'destructive'
+					});
+					return Promise.reject(
+						`No hay suficiente stock de ${galleta.nombre}`
+					);
+				}
 			});
 
 			// Esperar a que todas las promesas se resuelvan
 			const results = await Promise.all(promises);
+
+			console.log(results);
 
 			// Verificar si todas las ventas fueron exitosas
 			if (results.every(result => result)) {
@@ -165,14 +191,10 @@ function ModalCompra({ pathname }: ModalCompraProps) {
 					typeVentas: null,
 					idUpdate: -1
 				});
-			} else {
-				toast({
-					title: 'Error',
-					description: `Ocurrió un error al guardar la venta`,
-					variant: 'destructive'
-				});
 			}
 		} catch (error) {
+			console.log({ error });
+
 			toast({
 				title: 'Error',
 				description: `Ocurrió un error al guardar la venta`
@@ -183,51 +205,52 @@ function ModalCompra({ pathname }: ModalCompraProps) {
 	const handleGalletas2 = async () => {
 		try {
 			listaGalletas.forEach(async galleta => {
-				const url = `http://localhost:3001/galletas?id=${galleta.id}`;
-				const urlWithParams = new URL(url);
+				const { data: g } = await supabase
+					.from('galletas')
+					.select('*')
+					.eq('id', galleta.id);
 
-				//obtener el objeto con nombre de la galleta
-				const resp = await fetch(urlWithParams);
-				let g = await resp.json();
+				let newCantidad = 0;
 
-				const newCantidad = g[0].stock + Number(galleta.cantidad);
-
-				g[0].stock = newCantidad;
-
-				const response = await fetch(
-					`http://localhost:3001/galletas/${galleta.id}`,
-					{
-						method: 'PUT',
-						headers: {
-							'Content-Type': 'application/json'
-						},
-						body: JSON.stringify(g[0])
-					}
-				);
-				const dataResponse = await response.json();
-				if (dataResponse) {
-					toast({
-						title: 'Galleta actualizada',
-						description: `Se actualizo la cantidad de ${g[0].nombre} a ${newCantidad}`
-					});
-
-					//limpiar lista de galletas
-					useVentaStore.setState({ listaGalletas: [] });
-					//limpiar input
-					useFormState.setState({
-						cantidades: null,
-						typeVentas: null,
-						idUpdate: -1
-					});
+				if (g && g.length > 0) {
+					newCantidad = (g[0].stock || 0) + Number(galleta.cantidad);
 				} else {
+					// Aquí puedes manejar el caso en el que no se encontró ninguna galleta con el ID
+					console.log(
+						'No se encontró ninguna galleta con el ID:',
+						galleta.id
+					);
+				}
+
+				const { data: dataResponse, error } = await supabase
+					.from('galletas')
+					.update({ stock: newCantidad })
+					.eq('id', galleta.id);
+
+				if (error) {
 					toast({
 						title: 'Error',
 						description: `Ocurrio un error al actualizar la galleta`,
 						variant: 'destructive'
 					});
+				} else {
+					toast({
+						title: 'Galleta actualizada',
+						description: `Se actualizo la cantidad de ${galleta.nombre} con éxito`
+					});
 				}
+
+				//limpiar lista de galletas
+				useVentaStore.setState({ listaGalletas: [] });
+				//limpiar input
+				useFormState.setState({
+					cantidades: null,
+					typeVentas: null,
+					idUpdate: -1
+				});
 			});
 		} catch (error) {
+			console.log({ error });
 			toast({
 				title: 'Error',
 				description: `Ocurrio un error al actualizar la galleta`,

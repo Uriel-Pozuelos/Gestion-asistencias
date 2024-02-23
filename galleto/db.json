@@ -3,6 +3,7 @@
     {
       "id": 1,
       "nombre": "galleto",
+      "correo": "urieher99@gmail.com",
       "password": "1234"
     }
   ],
@@ -11,7 +12,7 @@
       "id": 1,
       "nombre": "Galleta oreo",
       "precio": 10,
-      "stock": 106
+      "stock": 105
     },
     {
       "id": 2,
@@ -47,7 +48,7 @@
       "id": 7,
       "nombre": "Galleta decorada",
       "precio": 15,
-      "stock": 76
+      "stock": 46
     },
     {
       "id": 8,
@@ -603,6 +604,29 @@
       "cantidad": "15",
       "fecha": "2023-12-08T02:42:20.223Z",
       "id": 42
+    },
+    {
+      "cookie": "/oreo.webp",
+      "typeVenta": "pieza",
+      "cantidad": "1",
+      "precioVenta": "10",
+      "total": 10,
+      "precio": 10,
+      "nombre": "Galleta oreo",
+      "fecha": "2023-12-09T14:29:43.976Z",
+      "id": 43
+    },
+    {
+      "cookie": "/galletas.webp",
+      "typeVenta": "caja",
+      "caja": "kilo",
+      "precioVenta": "50",
+      "total": 50,
+      "precio": 15,
+      "nombre": "Galleta de decoradas",
+      "cantidad": "30",
+      "fecha": "2023-12-09T14:29:43.973Z",
+      "id": 44
     }
   ],
   "totalVentas": [

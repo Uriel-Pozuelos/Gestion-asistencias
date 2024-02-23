@@ -2,6 +2,7 @@ import { Button } from '../ui/button';
 import { useVentaStore } from '@/store/ventaStore';
 import { useToast } from '../ui/use-toast';
 import { useFormState } from '@/store/useFormState';
+import supabase from '@/db';
 
 function MermaButton() {
 	const { listaGalletas } = useVentaStore();
@@ -12,72 +13,82 @@ function MermaButton() {
 		try {
 			await Promise.all(
 				listaGalletas.map(async galleta => {
-					const url = `http://localhost:3001/galletas?id=${galleta.id}`;
-					const urlWithParams = new URL(url);
-
+					console.log(galleta);
 					try {
-						const resp = await fetch(urlWithParams);
-						const g = await resp.json();
+						let { data: g, error } = await supabase
+							.from('galletas')
+							.select('*')
+							.eq('id', galleta.id);
 
-						if (Number(g[0].stock) < Number(galleta.cantidad)) {
+						if (error) {
 							throw new Error(
-								`La cantidad de merma es mayor a la existencia para ${g[0].nombre}`
+								`Ocurrió un error al obtener la galleta ${galleta.nombre}`
 							);
 						}
 
-						g[0].stock -= Number(galleta.cantidad);
+						if (!g || g.length === 0) {
+							throw new Error(
+								`No se encontró ninguna galleta con el ID: ${galleta.id}`
+							);
+						}
 
-						const urlUpdate = `http://localhost:3001/galletas/${g[0].id}`;
-						const urlWithParamsUpdate = new URL(urlUpdate);
+						if (g[0].stock) {
+							g[0].stock -= Number(galleta.cantidad);
+						}
 
-						const responseUpdate = await fetch(urlWithParamsUpdate, {
-							method: 'PUT',
-							headers: {
-								'Content-Type': 'application/json'
-							},
-							body: JSON.stringify(g[0])
-						});
+						const { data: dataResponseUpdate, error: errorUpdate } =
+							await supabase
+								.from('galletas')
+								.update(g[0])
+								.eq('id', galleta.id);
 
-						if (!responseUpdate.ok) {
+						if (errorUpdate) {
 							throw new Error(
 								`Ocurrió un error al actualizar la galleta ${g[0].nombre}`
 							);
 						}
 
+						let perdida = {
+							id: '',
+							fecha: '',
+							cantidad: '',
+							sales: 0
+						};
+						//@ts-ignore
 						g[0].fecha = new Date().toISOString();
+						//@ts-ignore
 						g[0].cantidad = String(Number(galleta.cantidad));
-						g[0].id = new Date().toISOString() + g[0].id;
+						//@ts-ignore
 						g[0].sales = Number(galleta.cantidad);
+						//@ts-ignore
+						delete g[0].precio;
+						//@ts-ignore
+						delete g[0].stock;
+						//@ts-ignore
+						delete g[0].id;
+						//@ts-ignore
+						g[0].cookie = galleta.cookie;
 
-						const response = await fetch(
-							`http://localhost:3001/perdida`,
-							{
-								method: 'POST',
-								headers: {
-									'Content-Type': 'application/json'
-								},
-								body: JSON.stringify(g[0])
-							}
-						);
+						const { data: dataResponse, error: errorResponse } =
+							await supabase.from('perdida').insert([g[0]]);
 
-						const dataResponse = await response.json();
-
-						if (dataResponse) {
-							toast({
-								title: 'Galleta actualizada',
-								description: `Se actualizó la merma de ${g[0].nombre}`
-							});
-
+						if (errorResponse) {
+							throw new Error(
+								`Ocurrió un error al insertar la perdida de la galleta ${g[0].nombre}`
+							);
+						} else {
 							useVentaStore.setState({ listaGalletas: [] });
 							useFormState.setState({
 								cantidades: null,
 								typeVentas: null,
 								idUpdate: -1
 							});
-						} else {
-							throw new Error(
-								`Ocurrió un error al actualizar la galleta ${g[0].nombre}`
-							);
+
+							toast({
+								title: 'Merma',
+								description: 'Se ha registrado la merma',
+								variant: 'default'
+							});
 						}
 					} catch (error) {
 						toast({

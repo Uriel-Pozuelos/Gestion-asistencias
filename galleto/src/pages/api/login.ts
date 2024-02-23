@@ -1,5 +1,6 @@
 import { z, ZodError } from 'zod';
 import type { APIRoute } from 'astro';
+import supabase from '@/db';
 
 const schema = z.object({
 	usuario: z.string().min(3, {
@@ -67,29 +68,12 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 		});
 	}
 
-	const resp = await fetch(
-		`http://localhost:3001/usuarios?nombre=${username}`
-	);
+	let { data, error } = await supabase.auth.signInWithPassword({
+		email: username as string,
+		password: password as string
+	});
 
-	const data = await resp.json();
-
-	if (data.length === 0) {
-		return new Response(
-			JSON.stringify({
-				message: 'Usuario o contraseña incorrectos'
-			}),
-			{
-				status: 401,
-				headers: {
-					'content-type': 'application/json;charset=UTF-8'
-				}
-			}
-		);
-	}
-
-	const usuario = data[0];
-
-	if (usuario.password !== password) {
+	if (error) {
 		return new Response(
 			JSON.stringify({
 				message: 'Usuario o contraseña incorrectos'

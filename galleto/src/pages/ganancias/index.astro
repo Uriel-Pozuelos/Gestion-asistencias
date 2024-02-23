@@ -18,6 +18,7 @@ import {
 	MoveDownRight
 } from 'lucide-react';
 import type { VentaData } from '@/components/dashBoard/dashFunctions';
+import supabase from '@/db';
 
 interface Galleta {
 	id: number;
@@ -42,20 +43,39 @@ interface TableSalesProps {
 }
 
 const getInventario = async () => {
-	const res = await fetch('http://localhost:3001/galletas');
-	const data = await res.json();
-	return data as Promise<Galleta[]>;
+	// const res = await fetch('http://localhost:3001/galletas');
+	// const data = await res.json();
+	// return data as Promise<Galleta[]>;
+	const { data, error } = await supabase.from('galletas').select('*');
+	if (error) {
+		console.log(error);
+		return [];
+	}
+	return data;
 };
 const getPerdidas = async () => {
-	const res = await fetch('http://localhost:3001/perdidas');
-	const data = await res.json();
-	return data as Promise<Perdida[]>;
+	// const res = await fetch('http://localhost:3001/perdidas');
+	// const data = await res.json();
+	// return data as Promise<Perdida[]>;
+
+	const { data, error } = await supabase.from('perdidas').select('*');
+	if (error) {
+		console.log(error);
+		return [];
+	}
+	return data;
 };
 
 const getVentas = async () => {
-	const res = await fetch('http://localhost:3001/venta');
-	const data = await res.json();
-	return data as Promise<VentaData[]>;
+	// const res = await fetch('http://localhost:3001/venta');
+	// const data = await res.json();
+	// return data as Promise<VentaData[]>;
+	const { data, error } = await supabase.from('venta').select('*');
+	if (error) {
+		console.log(error);
+		return [];
+	}
+	return data;
 };
 
 const [ventas, inventario, perdidas] = await Promise.all([
@@ -75,15 +95,24 @@ ventas.forEach(venta => {
 	const index = infoVentas.findIndex(
 		infoVenta => infoVenta.nombre === venta.nombre
 	);
+
 	if (index === -1) {
+		// Verificar que los valores no sean null antes de usarlos
+		const ganancias = venta.total ? venta.total : 0;
+		const cantidad = venta.cantidad ? venta.cantidad : 0;
+
 		infoVentas.push({
-			nombre: venta.nombre,
-			ganancias: venta.total,
-			cantidad: parseInt(venta.cantidad)
+			nombre: venta.nombre ?? '',
+			ganancias,
+			cantidad
 		});
 	} else {
-		infoVentas[index].ganancias += venta.total;
-		infoVentas[index].cantidad += parseInt(venta.cantidad);
+		// Verificar que los valores no sean null antes de usarlos
+		const ganancias = venta.total ? venta.total : 0;
+		const cantidad = venta.cantidad ? venta.cantidad : 0;
+
+		infoVentas[index].ganancias += ganancias;
+		infoVentas[index].cantidad += cantidad;
 	}
 });
 
@@ -94,14 +123,14 @@ inventario.forEach(galleta => {
 		infoVenta => infoVenta.nombre === galleta.nombre
 	);
 	const indexPerdida = perdidas.findIndex(
-		perdida => perdida.nombre === galleta.nombre
+		perdida => perdida.name === galleta.nombre
 	);
 	if (index === -1) {
 		tableSales.push({
 			id: galleta.id,
-			nombre: galleta.nombre,
-			stock: galleta.stock,
-			precio: galleta.precio,
+			nombre: galleta.nombre ?? '',
+			stock: galleta.stock ?? 0,
+			precio: galleta.precio ?? 0,
 			sales: 0,
 			total: 0,
 			ganacias: 0
@@ -109,23 +138,23 @@ inventario.forEach(galleta => {
 	} else {
 		tableSales.push({
 			id: galleta.id,
-			nombre: galleta.nombre,
-			stock: galleta.stock,
-			precio: galleta.precio,
-			sales: perdidas[index].sales,
+			nombre: galleta.nombre ?? '',
+			stock: galleta.stock ?? 0,
+			precio: galleta.precio ?? 0,
+			sales: perdidas[index].sales ?? 0,
 			total: infoVentas[index].ganancias,
 			ganacias:
 				infoVentas[index].ganancias +
-				galleta.precio * infoVentas[index].cantidad
+				(galleta.precio ?? 0) * infoVentas[index].cantidad
 		});
 	}
 	if (indexPerdida !== -1) {
 		tableSales[tableSales.length - 1].sales +=
-			perdidas[indexPerdida].sales;
+			perdidas[indexPerdida]?.sales ?? 0;
 		tableSales[tableSales.length - 1].total -=
-			perdidas[indexPerdida].sales;
+			perdidas[indexPerdida]?.sales ?? 0;
 		tableSales[tableSales.length - 1].ganacias -=
-			perdidas[indexPerdida].sales * galleta.precio;
+			perdidas[indexPerdida]?.sales ?? 0 * (galleta.precio ?? 0);
 	}
 });
 ---
