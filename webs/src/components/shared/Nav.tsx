@@ -44,6 +44,12 @@ function Nav({ role, path }: { role: string; path: string }) {
 								</Button>
 							</form>
 						</li>
+						<li className="flex items-center rounded-md hover:bg-blue-950  transition-colors duration-200">
+							<Link href="/alumno">
+								<CalendarDays size={24} className="my-4 mr-2" />{' '}
+								<span>Revisar listas</span>
+							</Link>
+						</li>
 					</ul>
 				</nav>
 			</>

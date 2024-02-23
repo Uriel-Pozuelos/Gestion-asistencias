@@ -54,7 +54,6 @@ function BusquedaAlumno({ info }: BusquedaAlumnoProps) {
 									href={`/alumno/${ids[index]}?alumno=${info.clave_persona}`}
 									className="mb-2 hover:text-blue-500 transition-colors duration-200">
 									{' Lista de '}
-									{idMateria[index]}
 									{filteredItem.nombre}
 								</Link>
 							</li>

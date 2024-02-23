@@ -28,7 +28,9 @@ async function page({ params }: { params: { id: string } }) {
 	}[] = [];
 
 	let alumnos: Alumno[] = [];
-	let resp = await fetch('http://localhost:3001/relleno/v2');
+	let resp = await fetch('http://localhost:3001/relleno/v2', {
+		cache: 'no-store'
+	});
 	const asistencia = (await resp.json()) as Record<string, string>;
 
 	const { fecha_inicio, fecha_fin } = listas.periodo[0];

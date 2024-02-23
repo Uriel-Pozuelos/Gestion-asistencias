@@ -1,0 +1,11 @@
+// vite.config.ts
+import { unstable_vitePlugin as remix } from "file:///home/jonarro/arqui/client/node_modules/.pnpm/@remix-run+dev@2.2.0_@remix-run+serve@2.2.0_typescript@5.1.6_vite@4.5.0/node_modules/@remix-run/dev/dist/index.js";
+import { defineConfig } from "file:///home/jonarro/arqui/client/node_modules/.pnpm/vite@4.5.0/node_modules/vite/dist/node/index.js";
+import tsconfigPaths from "file:///home/jonarro/arqui/client/node_modules/.pnpm/vite-tsconfig-paths@4.2.1_typescript@5.1.6_vite@4.5.0/node_modules/vite-tsconfig-paths/dist/index.mjs";
+var vite_config_default = defineConfig({
+  plugins: [remix(), tsconfigPaths()]
+});
+export {
+  vite_config_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsidml0ZS5jb25maWcudHMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImNvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9kaXJuYW1lID0gXCIvaG9tZS9qb25hcnJvL2FycXVpL2NsaWVudFwiO2NvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9maWxlbmFtZSA9IFwiL2hvbWUvam9uYXJyby9hcnF1aS9jbGllbnQvdml0ZS5jb25maWcudHNcIjtjb25zdCBfX3ZpdGVfaW5qZWN0ZWRfb3JpZ2luYWxfaW1wb3J0X21ldGFfdXJsID0gXCJmaWxlOi8vL2hvbWUvam9uYXJyby9hcnF1aS9jbGllbnQvdml0ZS5jb25maWcudHNcIjtpbXBvcnQgeyB1bnN0YWJsZV92aXRlUGx1Z2luIGFzIHJlbWl4IH0gZnJvbSBcIkByZW1peC1ydW4vZGV2XCI7XG5pbXBvcnQgeyBkZWZpbmVDb25maWcgfSBmcm9tIFwidml0ZVwiO1xuaW1wb3J0IHRzY29uZmlnUGF0aHMgZnJvbSBcInZpdGUtdHNjb25maWctcGF0aHNcIjtcblxuZXhwb3J0IGRlZmF1bHQgZGVmaW5lQ29uZmlnKHtcbiAgcGx1Z2luczogW3JlbWl4KCksIHRzY29uZmlnUGF0aHMoKV0sXG59KTtcbiJdLAogICJtYXBwaW5ncyI6ICI7QUFBZ1EsU0FBUyx1QkFBdUIsYUFBYTtBQUM3UyxTQUFTLG9CQUFvQjtBQUM3QixPQUFPLG1CQUFtQjtBQUUxQixJQUFPLHNCQUFRLGFBQWE7QUFBQSxFQUMxQixTQUFTLENBQUMsTUFBTSxHQUFHLGNBQWMsQ0FBQztBQUNwQyxDQUFDOyIsCiAgIm5hbWVzIjogW10KfQo=

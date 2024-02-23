@@ -173,7 +173,7 @@ function BusquedaEscolares({ listas }: BusquedaEscolaresProps) {
 								<div key={lista.lista[0].clave}>
 									<h2>Lista {lista.lista[0].clave}</h2>
 									<Link
-										href={`/escolares/lista/${lista.lista[0].clave}?materia=${lista.lista[0].clave_materia}`}>
+										href={`/escolares/lista/${lista.lista[0].clave}`}>
 										{' '}
 										Grupo
 										{
@@ -190,7 +190,7 @@ function BusquedaEscolares({ listas }: BusquedaEscolaresProps) {
 									{lista.alumnos.map(alumno => (
 										<li key={alumno.persona[0].clave}>
 											<Link
-												href={`/escolares/lista/${lista.lista[0].clave}?alumno=${alumno.persona[0].clave}?materia=${lista.lista[0].clave_materia}`}>
+												href={`/escolares/lista/${lista.lista[0].clave}?alumno=${alumno.persona[0].clave}`}>
 												{alumno.persona[0].nombre}{' '}
 												{alumno.persona[0].apellidoPaterno}{' '}
 												{alumno.persona[0].apellidoMaterno}

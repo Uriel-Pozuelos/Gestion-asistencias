@@ -150,7 +150,7 @@ function Busqueda({ listaAsistencia }: Props) {
 									{matchingAlumnos.map((alumno, alumnoIndex) => (
 										<li key={alumnoIndex}>
 											<Link
-												href={`/docente/lista/${filteredItem.clave}?alumno=${alumno.persona[0].clave}?materia=${filteredItem.clave_materia}`}
+												href={`/docente/lista/${filteredItem.clave}?alumno=${alumno.persona[0].clave}`}
 												className="mb-2 hover:text-blue-500 transition-colors duration-200">
 												Alumno:{' '}
 												<span className="font-bold">

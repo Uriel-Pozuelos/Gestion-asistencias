@@ -84,4 +84,8 @@ relleno.get('/v2', async () => {
 	return record;
 });
 
+relleno.delete('/v2', () => {
+	return new Relleno().deleteV2AllRelleno();
+});
+
 export default relleno;

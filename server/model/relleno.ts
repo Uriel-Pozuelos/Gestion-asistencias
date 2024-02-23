@@ -58,6 +58,10 @@ export class Relleno {
 		return update;
 	}
 
+	async deleteV2AllRelleno() {
+		return await db.delete(schema.listav2);
+	}
+
 	async deleteAllRelleno() {
 		return await db.delete(schema.relleno_lista);
 	}
