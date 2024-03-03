@@ -7,6 +7,15 @@ import { Card } from '@/components/ui/card';
 import Nav from '@/components/ui/nav.astro';
 import ModalCompra from '@/components/ui/venta-modal';
 import NombreGalleta from '@/components/compra/NombreGalleta';
+import { isAuth } from '@/lib/auth';
+
+let a = await isAuth();
+
+console.log('el usuario esta autenticado', a);
+if (a === false) {
+	console.log('el usuario no esta autenticado');
+	return Astro.redirect('/');
+}
 ---
 
 <Layout title="Venta">

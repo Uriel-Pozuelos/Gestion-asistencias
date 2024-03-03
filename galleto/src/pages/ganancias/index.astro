@@ -19,6 +19,15 @@ import {
 } from 'lucide-react';
 import type { VentaData } from '@/components/dashBoard/dashFunctions';
 import supabase from '@/db';
+import { isAuth } from '@/lib/auth';
+
+let a = await isAuth();
+
+console.log('el usuario esta autenticado', a);
+if (a === false) {
+	console.log('el usuario no esta autenticado');
+	return Astro.redirect('/');
+}
 
 interface Galleta {
 	id: number;

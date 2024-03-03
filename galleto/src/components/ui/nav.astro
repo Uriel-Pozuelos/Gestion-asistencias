@@ -13,9 +13,29 @@ import { fade } from 'astro:transitions';
 			<li><a href="/ganancias">Ganancias</a></li>
 			<li><a href="/inventario/gestion">Gesti&oacute;n</a></li>
 			<li><a href="/dashboard">Dashboard</a></li>
+			<li id="out">
+				<button>logout</button>
+			</li>
 		</ul>
 	</div>
 </nav>
+
+<script type="module">
+	document
+		.getElementById('out')
+		.addEventListener('click', async () => {
+			const res = await fetch('/api/logout', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			});
+
+			if (res.ok) {
+				window.location.href = '/';
+			}
+		});
+</script>
 
 <style>
 	nav {

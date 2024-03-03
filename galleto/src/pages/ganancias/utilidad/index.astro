@@ -10,24 +10,34 @@ import {
 	TableRow,
 	TableCell,
 	TableCaption
-	} from '@/components/ui/table';
-import {Button} from '@/components/ui/button';
+} from '@/components/ui/table';
+import { Button } from '@/components/ui/button';
 import RadioInventario from '@/components/ui/radiog-inventario';
-import {ClipboardList, Calculator} from 'lucide-react';
-import {Input} from '@/components/ui/input';
+import { ClipboardList, Calculator } from 'lucide-react';
+import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { isAuth } from '@/lib/auth';
 
+let a = await isAuth();
 
+console.log('el usuario esta autenticado', a);
+if (a === false) {
+	console.log('el usuario no esta autenticado');
+	return Astro.redirect('/');
+}
 ---
 
 <Layout title="Utilidad">
 	<Nav />
 	<main>
-		<div class="container bg-secondary/20 border-secondary rounded-lg p-3 my-5">
-		
+		<div
+			class="container bg-secondary/20 border-secondary rounded-lg p-3 my-5"
+		>
 			<div class="grid grid-cols-12">
 				<div class="col-start-2 col-span-10">
-					<p class="text-[2rem] font-bold text-secondary text-center">Utilidad</p>
+					<p class="text-[2rem] font-bold text-secondary text-center">
+						Utilidad
+					</p>
 				</div>
 
 				<div class="col-start-1 col-span-10">
@@ -40,7 +50,7 @@ import { Label } from '@/components/ui/label';
 								<TableHead>Costo</TableHead>
 							</TableRow>
 						</TableHeader>
-						<TableBody >
+						<TableBody>
 							<TableRow>
 								<TableCell>Oreo</TableCell>
 								<TableCell>100</TableCell>
@@ -106,33 +116,28 @@ import { Label } from '@/components/ui/label';
 				</div>
 				<div class="col-start-11 col-span-2 ml-5 flex">
 					<div class="row-span-1 my-auto">
-						<RadioInventario client:idle/>
+						<RadioInventario client:idle />
 
-						<Button className='my-4 w-full'>
-							<ClipboardList className='me-2'/>
+						<Button className="my-4 w-full">
+							<ClipboardList className="me-2" />
 							Calcular Utilidad
 						</Button>
 						<a href="../ganancias" class="flex">
-							<Button 
-								type="submit" 
-								variant={'secondary'} 
-								className='w-full'
-							> 
-								<Calculator className='me-2'/>
+							<Button
+								type="submit"
+								variant={'secondary'}
+								className="w-full"
+							>
+								<Calculator className="me-2" />
 								Regresar
 							</Button>
 						</a>
 					</div>
-					
 				</div>
 				<div class="col-start-9 col-span-2">
-					<Label className='my-3'>
-						Total
-					</Label>
-					<Input className='my-2' placeholder='Cantidad total'/>
+					<Label className="my-3">Total</Label>
+					<Input className="my-2" placeholder="Cantidad total" />
 				</div>
-				
-
 			</div>
 		</div>
 	</main>

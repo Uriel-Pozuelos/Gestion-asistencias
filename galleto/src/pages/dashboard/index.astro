@@ -5,24 +5,40 @@ import Barlist from '@/components/ui/bar-list.tsx';
 import AreaChartCompoment from '@/components/ui/area-chart.tsx';
 import DashBoardButtons from '@/components/dashBoard/';
 import Estadistics from '@/components/dashBoard/estadistics';
+import { isAuth } from '@/lib/auth';
+
+let a = await isAuth();
+
+console.log('el usuario esta autenticado', a);
+if (a === false) {
+	console.log('el usuario no esta autenticado');
+	return Astro.redirect('/');
+}
 ---
 
 <Layout title="Dashboard">
 	<Nav />
 	<main>
-		<div class="grid grid-cols-12 my-[3.5rem] mx-[10rem] gap-2 sm:grid sm:grid-cols-12 sm:mx-[2.5rem]">
-
+		<div
+			class="grid grid-cols-12 my-[3.5rem] mx-[10rem] gap-2 sm:grid sm:grid-cols-12 sm:mx-[2.5rem]"
+		>
 			<!-- Buttons -->
-			<div class="col-start-1 col-span-12 md:col-start-1 md:col-span-12 sm:col-span-12 sm:col-start-1">
+			<div
+				class="col-start-1 col-span-12 md:col-start-1 md:col-span-12 sm:col-span-12 sm:col-start-1"
+			>
 				<DashBoardButtons client:idle />
 			</div>
 
 			<!-- cards -->
-			<div class="col-start-1 col-span-12 md:col-start-1 md:col-span-12 sm:col-span-12 sm:col-start-1">
+			<div
+				class="col-start-1 col-span-12 md:col-start-1 md:col-span-12 sm:col-span-12 sm:col-start-1"
+			>
 				<Estadistics client:idle />
 			</div>
 
-			<div class="col-start-1 col-span-12 md:col-start-1 md:col-span-12">
+			<div
+				class="col-start-1 col-span-12 md:col-start-1 md:col-span-12"
+			>
 				<div class="flex flex-row space-x-4">
 					<div class="basis-1/2">
 						<Barlist client:idle />
@@ -32,7 +48,6 @@ import Estadistics from '@/components/dashBoard/estadistics';
 					</div>
 				</div>
 			</div>
-
 		</div>
 	</main>
 </Layout>

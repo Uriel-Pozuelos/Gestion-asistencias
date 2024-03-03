@@ -3,7 +3,6 @@ import { CardTremor } from '../ui/card-tremor';
 import { useEffect, useState } from 'react';
 import { useDayStore } from '@/store/dayStore';
 import { filterDataByDate, type VentaData } from './dashFunctions';
-import { CircleDollarSign } from 'lucide-react';
 
 import supabase from '@/db';
 const stadistic = [
