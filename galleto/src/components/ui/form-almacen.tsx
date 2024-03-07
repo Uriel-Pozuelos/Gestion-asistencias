@@ -18,16 +18,8 @@ function FormAlmacen({ pathname }: FormAlmacenProps) {
 	const InputVallue = useRef<HTMLInputElement>(null);
 	const { toast } = useToast();
 	const formRef = useRef<HTMLFormElement>(null);
-	const {
-		cantidades,
-		typeVentas,
-		isUpdate,
-		idUpdate,
-		setIsUpdate,
-		setTypeVentas,
-		precios,
-		setPrecios
-	} = useFormState();
+	const { cantidades, isUpdate, idUpdate, setIsUpdate } =
+		useFormState();
 	const { currentCookie } = useCookieStore();
 
 	const handleSumit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -70,10 +62,6 @@ function FormAlmacen({ pathname }: FormAlmacenProps) {
 				description: 'Se ha actualizado una venta de la lista'
 			});
 		}
-	};
-
-	const handleClick = () => {
-		const cantidad = InputVallue.current?.value;
 	};
 
 	return (

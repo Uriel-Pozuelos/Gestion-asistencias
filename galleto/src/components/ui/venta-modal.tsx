@@ -90,7 +90,7 @@ const handleExport = () => {
 	const doc = new jsPDF();
 
 	// Obtener la tabla por su ID o cualquier otro selector
-	const table = document.getElementById('historial_facturacion');
+	// const table = document.getElementById('historial_facturacion');
 
 	// Generar el PDF a partir de la tabla y su print
 	autoTable(doc, { html: '#historial_facturacion' });
@@ -107,23 +107,31 @@ function ModalCompra({ pathname }: ModalCompraProps) {
 
 	const handleVenta = async () => {
 		try {
-			// Utilizar map para obtener un array de promesas
 			const promises = listaGalletas.map(async galleta => {
 				const { data: g } = await supabase
 					.from('galletas')
 					.select('*')
 					.eq('id', galleta.id);
 
-				// Verificar si hay suficiente stock
-
 				let newCantidad = 0;
 
 				if (g && g.length > 0) {
 					newCantidad = (g[0].stock || 0) - Number(galleta.cantidad);
 
+					if (newCantidad < 0) {
+						toast({
+							title: 'Error',
+							description: `No hay suficiente stock de ${galleta.nombre}`,
+							variant: 'destructive'
+						});
+						return Promise.reject(
+							`No hay suficiente stock de ${galleta.nombre}`
+						);
+					}
+
 					g[0].stock = newCantidad;
 
-					const { data: dataResponse, error } = await supabase
+					const { error } = await supabase
 						.from('galletas')
 						.update(g[0])
 						.eq('id', galleta.id);
@@ -134,57 +142,60 @@ function ModalCompra({ pathname }: ModalCompraProps) {
 					if (error) {
 						toast({
 							title: 'Error',
-							description: `Ocurrio un error al actualizar la galleta`,
+							description: `Ocurrió un error al actualizar la galleta`,
 							variant: 'destructive'
 						});
+						return Promise.reject(
+							`Error al actualizar la galleta: ${galleta.nombre}`
+						);
 					} else {
 						toast({
 							title: 'Galleta actualizada',
-							description: `Se actualizo la cantidad de ${galleta.nombre} con éxito`
+							description: `Se actualizó la cantidad de ${galleta.nombre} con éxito`
 						});
+						return data;
 					}
-
-					return data;
 				} else {
-					// Aquí puedes manejar el caso en el que no se encontró ninguna galleta con el ID
 					console.log(
 						'No se encontró ninguna galleta con el ID:',
 						galleta.id
 					);
-				}
-
-				if (newCantidad < 0) {
-					toast({
-						title: 'Error',
-						description: `No hay suficiente stock de ${galleta.nombre}`,
-						variant: 'destructive'
-					});
 					return Promise.reject(
-						`No hay suficiente stock de ${galleta.nombre}`
+						`No se encontró ninguna galleta con el ID: ${galleta.id}`
 					);
 				}
 			});
 
-			// Esperar a que todas las promesas se resuelvan
 			const results = await Promise.all(promises);
 
-			console.log(results);
-
-			// Verificar si todas las ventas fueron exitosas
 			if (results.every(result => result)) {
 				toast({
 					title: 'Venta exitosa',
 					description: `Se vendieron ${listaGalletas.length} galletas con éxito`
 				});
-				console.log('lista limpia');
 
-				// Guardar es lastListaGalletas
+				console.log(
+					'Antes de actualizar listaGalletas:',
+					listaGalletas
+				);
+
+				// Guardar la última lista de galletas vendidas
 				useVentaStore.setState({
 					lastListaGalletas: listaGalletas
 				});
 
+				console.log(
+					'Después de guardar lastListaGalletas:',
+					useVentaStore.getState().lastListaGalletas
+				);
+
 				// Limpiar lista de galletas
 				useVentaStore.setState({ listaGalletas: [] });
+				console.log(
+					'Después de limpiar listaGalletas:',
+					useVentaStore.getState().lastListaGalletas
+				);
+
 				// Limpiar input
 				useFormState.setState({
 					cantidades: null,
@@ -194,7 +205,6 @@ function ModalCompra({ pathname }: ModalCompraProps) {
 			}
 		} catch (error) {
 			console.log({ error });
-
 			toast({
 				title: 'Error',
 				description: `Ocurrió un error al guardar la venta`
@@ -222,7 +232,7 @@ function ModalCompra({ pathname }: ModalCompraProps) {
 					);
 				}
 
-				const { data: dataResponse, error } = await supabase
+				const { error } = await supabase
 					.from('galletas')
 					.update({ stock: newCantidad })
 					.eq('id', galleta.id);
@@ -239,6 +249,9 @@ function ModalCompra({ pathname }: ModalCompraProps) {
 						description: `Se actualizo la cantidad de ${galleta.nombre} con éxito`
 					});
 				}
+
+				//guardar lastListaGalletas
+				useVentaStore.setState({ lastListaGalletas: listaGalletas });
 
 				//limpiar lista de galletas
 				useVentaStore.setState({ listaGalletas: [] });

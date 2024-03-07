@@ -10,14 +10,7 @@ import {
 	TableCell
 } from '@/components/ui/table';
 
-import RadioInventario from '@/components/ui/radiog-inventario';
-import {
-	ClipboardList,
-	Calculator,
-	MoveUpRight,
-	MoveDownRight
-} from 'lucide-react';
-import type { VentaData } from '@/components/dashBoard/dashFunctions';
+import { MoveDownRight, MoveUpRight } from 'lucide-react';
 import supabase from '@/db';
 import { isAuth } from '@/lib/auth';
 
@@ -27,18 +20,6 @@ console.log('el usuario esta autenticado', a);
 if (a === false) {
 	console.log('el usuario no esta autenticado');
 	return Astro.redirect('/');
-}
-
-interface Galleta {
-	id: number;
-	nombre: string;
-	stock: number;
-	precio: number;
-}
-interface Perdida {
-	id: number;
-	nombre: string;
-	sales: number;
 }
 
 interface TableSalesProps {

@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label';
 import { useState } from 'react';
 
 function RadioInventario() {
-	const [value, setValue] = useState<string>('dia');
+	const [_, setValue] = useState<string>('dia');
 
 	return (
 		<RadioGroup

@@ -1,11 +1,7 @@
 import { jsonify } from '@/lib/jsonify';
 import type { APIRoute } from 'astro';
 
-interface Api {
-	message: string;
-}
-
-export const GET: APIRoute = ({ params, request }) => {
+export const GET: APIRoute = () => {
 	return jsonify([
 		{
 			id: 1,

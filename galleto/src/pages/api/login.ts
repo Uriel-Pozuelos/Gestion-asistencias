@@ -68,7 +68,7 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 		});
 	}
 
-	let { data, error } = await supabase.auth.signInWithPassword({
+	let { error } = await supabase.auth.signInWithPassword({
 		email: username as string,
 		password: password as string
 	});

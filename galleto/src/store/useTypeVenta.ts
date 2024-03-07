@@ -7,7 +7,7 @@ interface VentaStore {
 	setTypeVenta: (typeVenta: TypeVenta) => void;
 }
 
-export const useTypeVenta = create<VentaStore>((set, get) => ({
+export const useTypeVenta = create<VentaStore>(set => ({
 	typeVenta: 'bolsa',
 	setTypeVenta: (typeVenta: TypeVenta) => set({ typeVenta })
 }));

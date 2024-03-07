@@ -7,7 +7,6 @@ import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import Drawagle from './Drawagle';
 import { useVentaStore } from '@/store/ventaStore';
-import { useTypeVenta } from '@/store/useTypeVenta';
 import {
 	Select,
 	SelectContent,
@@ -52,7 +51,8 @@ export function RadioGroupForm() {
 		const precioxgramo = cookieData.get(currentCookie)?.precioxgramo;
 		const preciobolsa = cookieData.get(currentCookie)?.precioBolsa;
 		const precioCaja = cookieData.get(currentCookie)?.precioCaja;
-		const precioCaja2 = Number(cookieData.get(currentCookie)?.precioCaja) * .5;
+		const precioCaja2 =
+			Number(cookieData.get(currentCookie)?.precioCaja) * 0.5;
 		const id = cookieData.get(currentCookie)?.id;
 		const nomnbre = cookieData.get(currentCookie)?.nombre;
 		let total;
@@ -61,10 +61,10 @@ export function RadioGroupForm() {
 		// Calcular el total de la venta
 		switch (json.typeVenta) {
 			case 'caja':
-				total = 
-					json.caja === 'kilo' 
-						? Number(precioCaja)*.5 
-						: precioCaja2*.5;
+				total =
+					json.caja === 'kilo'
+						? Number(precioCaja) * 0.5
+						: precioCaja2 * 0.5;
 				// total =
 				// 	json.caja === '1/2kilo'
 				// 		? Number(precioCaja) * 0.5
@@ -160,8 +160,8 @@ export function RadioGroupForm() {
 		const precio = cookieData.get(currentCookie)?.precio;
 		const precioxgramo = cookieData.get(currentCookie)?.precioxgramo;
 		const preciobolsa = cookieData.get(currentCookie)?.precioBolsa;
-		const precioCaja = Number(cookieData.get(currentCookie)?.precioCaja)*.5;
-		const precioCaja2 = Number(cookieData.get(currentCookie)?.precioCaja)*.5;
+		const precioCaja =
+			Number(cookieData.get(currentCookie)?.precioCaja) * 0.5;
 
 		switch (typeVentas) {
 			case 'caja':
@@ -214,7 +214,7 @@ export function RadioGroupForm() {
 				onSubmit={handleSumit}>
 				<input name="cookie" type="hidden" value={currentCookie} />
 				<RadioGroup
-					className='lg:flex lg:flex-row lg:justify-start lg:items-center lg:space-x-1 lg:w-full lg:gap-1 lg:text-[1rem] sm:w-full sm:flex sm:flex-col sm:cols-2 sm:ml-1 md:grid md:grid-cols-2 md:gap-4 md:items-center md:justify-center md:space-x-0 md:space-y-0 md:text-[1.3rem] '
+					className="lg:flex lg:flex-row lg:justify-start lg:items-center lg:space-x-1 lg:w-full lg:gap-1 lg:text-[1rem] sm:w-full sm:flex sm:flex-col sm:cols-2 sm:ml-1 md:grid md:grid-cols-2 md:gap-4 md:items-center md:justify-center md:space-x-0 md:space-y-0 md:text-[1.3rem] "
 					defaultValue="granel"
 					name="typeVenta"
 					value={typeVentas ?? 'pieza'}
@@ -230,8 +230,14 @@ export function RadioGroupForm() {
 						<Label htmlFor="granel">Gramaje</Label>
 					</div>
 					<div className="flex items-center lg:justify-center sm:justify-start md:justify-start">
-						<RadioGroupItem value="pieza" className='sm:mr-2 md:ml-0 lg:ml-0' id="pieza" />
-						<Label className='md:ml-0 lg:ml-0' htmlFor="pieza">Piezas</Label>
+						<RadioGroupItem
+							value="pieza"
+							className="sm:mr-2 md:ml-0 lg:ml-0"
+							id="pieza"
+						/>
+						<Label className="md:ml-0 lg:ml-0" htmlFor="pieza">
+							Piezas
+						</Label>
 					</div>
 					<div className="flex items-center space-x-1">
 						<RadioGroupItem value="dinero" id="dinero" />
@@ -309,16 +315,21 @@ export function RadioGroupForm() {
 				</div>
 
 				<div className="lg:flex lg:grid lg:grid-rows-1 lg:grid-cols-2 lg:w-full lg:space-x-4 sm:grid sm:grid-cols-1 md:flex md:w-full sm:space-y-2 md:space-y-0">
-						{isUpdate ? (
-							<Button className="" type="submit">Actualizar </Button>
-						) : (
-							<Button type="submit">Añadir </Button>
-						)}
-						<Drawagle>
-							<Button className='lg:ml-4 lg:col-start-2 md:ml-4 md:space-x-2 sm:w-full md:w-full' variant={'secondary'} type="button">
-								Ver lista
-							</Button>
-						</Drawagle>
+					{isUpdate ? (
+						<Button className="" type="submit">
+							Actualizar{' '}
+						</Button>
+					) : (
+						<Button type="submit">Añadir </Button>
+					)}
+					<Drawagle>
+						<Button
+							className="lg:ml-4 lg:col-start-2 md:ml-4 md:space-x-2 sm:w-full md:w-full"
+							variant={'secondary'}
+							type="button">
+							Ver lista
+						</Button>
+					</Drawagle>
 				</div>
 			</form>
 		</>

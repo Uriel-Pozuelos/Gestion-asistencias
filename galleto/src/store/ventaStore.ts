@@ -19,7 +19,7 @@ interface VentaStore {
 	setLastListaGalletas: (lastListaGalletas: any[]) => void;
 }
 
-export const useVentaStore = create<VentaStore>((set, get) => ({
+export const useVentaStore = create<VentaStore>(set => ({
 	typeVenta: 'bolsa',
 	setTypeVenta: (
 		typeVenta: 'bolsa' | 'granel' | 'pieza' | 'dinero' | 'caja'

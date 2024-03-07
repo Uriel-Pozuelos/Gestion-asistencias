@@ -1,8 +1,7 @@
-import { Card, Grid, Metric, Text, Col } from '@tremor/react';
-import { CardTremor } from '../ui/card-tremor';
+import { Card, Grid, Metric, Text } from '@tremor/react';
 import { useEffect, useState } from 'react';
 import { useDayStore } from '@/store/dayStore';
-import { filterDataByDate, type VentaData } from './dashFunctions';
+import { filterDataByDate } from './dashFunctions';
 
 import supabase from '@/db';
 const stadistic = [
@@ -26,13 +25,13 @@ const getVentas = async () => {
 	}
 	return data;
 };
-async function getInventario() {
-	const { data, error } = await supabase.from('galletas').select('*');
-	if (error) {
-		return error;
-	}
-	return data;
-}
+// async function getInventario() {
+// 	const { data, error } = await supabase.from('galletas').select('*');
+// 	if (error) {
+// 		return error;
+// 	}
+// 	return data;
+// }
 
 function Estadistics() {
 	const { SelectedDate } = useDayStore(store => ({
@@ -41,12 +40,6 @@ function Estadistics() {
 	const today = new Date();
 	const filtro = SelectedDate();
 	const [Stadistics, setStadistics] = useState(stadistic);
-
-	const infoVentas: {
-		nombre: string;
-		ganancias: number;
-		cantidad: number;
-	}[] = [];
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -116,12 +109,6 @@ function Estadistics() {
 					(acc, venta) => acc + venta.total,
 					0
 				);
-
-				const infoVentas = inventario.map(item => ({
-					nombre: item.nombre,
-					ganancias: ganancias,
-					cantidad: item.stock
-				}));
 
 				setStadistics([
 					{

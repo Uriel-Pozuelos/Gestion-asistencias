@@ -15,7 +15,7 @@ interface FormState {
 	setPrecios: (precio: number) => void;
 }
 
-export const useFormState = create<FormState>((set, get) => ({
+export const useFormState = create<FormState>(set => ({
 	typeVentas: null,
 	setTypeVentas: (
 		typeVentas: 'bolsa' | 'granel' | 'pieza' | 'dinero' | 'caja'

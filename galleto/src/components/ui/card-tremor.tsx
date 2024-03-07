@@ -1,15 +1,4 @@
-import {
-	Card,
-	Flex,
-	Metric,
-	ProgressBar,
-	Tab,
-	TabGroup,
-	TabList,
-	TabPanel,
-	TabPanels,
-	Text
-} from '@tremor/react';
+import { Card, Metric, Text } from '@tremor/react';
 
 interface CardTremorProps {
 	title: string;

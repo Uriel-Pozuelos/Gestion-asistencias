@@ -1,7 +1,7 @@
 import supabase from '@/db';
 import type { APIRoute } from 'astro';
 
-export const POST: APIRoute = async ({ request, redirect }) => {
+export const POST: APIRoute = async () => {
 	const { error } = await supabase.auth.signOut();
 
 	if (error) {

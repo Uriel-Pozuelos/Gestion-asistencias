@@ -6,7 +6,6 @@ import supabase from '@/db';
 
 function MermaButton() {
 	const { listaGalletas } = useVentaStore();
-	const { setCantidad } = useVentaStore();
 	const { toast } = useToast();
 
 	const handleGalletas2 = async () => {
@@ -36,11 +35,10 @@ function MermaButton() {
 							g[0].stock -= Number(galleta.cantidad);
 						}
 
-						const { data: dataResponseUpdate, error: errorUpdate } =
-							await supabase
-								.from('galletas')
-								.update(g[0])
-								.eq('id', galleta.id);
+						const { error: errorUpdate } = await supabase
+							.from('galletas')
+							.update(g[0])
+							.eq('id', galleta.id);
 
 						if (errorUpdate) {
 							throw new Error(
@@ -48,12 +46,6 @@ function MermaButton() {
 							);
 						}
 
-						let perdida = {
-							id: '',
-							fecha: '',
-							cantidad: '',
-							sales: 0
-						};
 						//@ts-ignore
 						g[0].fecha = new Date().toISOString();
 						//@ts-ignore
@@ -69,8 +61,9 @@ function MermaButton() {
 						//@ts-ignore
 						g[0].cookie = galleta.cookie;
 
-						const { data: dataResponse, error: errorResponse } =
-							await supabase.from('perdida').insert([g[0]]);
+						const { error: errorResponse } = await supabase
+							.from('perdida')
+							.insert([g[0]]);
 
 						if (errorResponse) {
 							throw new Error(

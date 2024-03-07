@@ -4,7 +4,7 @@ import { persist } from 'zustand/middleware';
 
 export const useCookieStore = create(
 	persist<CookieStore>(
-		(set, get) => ({
+		set => ({
 			currentCookie: '/oreo.webp',
 			selectedCookie: '/oreo.webp',
 			placeholder: '/oreo.webp',
