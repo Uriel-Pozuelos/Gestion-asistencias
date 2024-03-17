@@ -1,0 +1,29 @@
+---
+import Nav from '@/components/ui/nav.astro';
+import Layout from '@/layouts/Layout.astro';
+import CrearUsuario from '@/components/login/CrearUsuario.tsx';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
+---
+
+<Layout title="Dashboard">
+	<Nav />
+
+	<main class="h-screen w-screen flex">
+		<div class="my-auto mx-auto">
+			<Card
+				className="bg-[#1C020C] text-white flex flex-col items-center justify-center  py-2 w-full border-transparent"
+			>
+				<CardHeader>
+					<div class="mt-3 mb-2">
+						<h3>Crear usuario</h3>
+					</div>
+				</CardHeader>
+				<CardContent>
+					<div class="flex flex-col items-center justify-center">
+						<CrearUsuario client:visible />
+					</div>
+				</CardContent>
+			</Card>
+		</div>
+	</main>
+</Layout>
