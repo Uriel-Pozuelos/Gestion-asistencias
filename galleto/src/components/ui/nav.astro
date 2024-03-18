@@ -1,4 +1,13 @@
 ---
+import supabase from '@/db/index';
+
+//obtener la sesion
+
+const { data: session } = await supabase.auth.getSession();
+
+console.log(session);
+
+const role = session?.session?.user?.role;
 ---
 
 <nav>
@@ -7,14 +16,68 @@
 	>
 	<div>
 		<ul>
-			<li><a href="/compra">Venta</a></li>
-			<li><a href="/inventario">Inventario</a></li>
-			<li><a href="/ganancias">Ganancias</a></li>
-			<li><a href="/inventario/gestion">Gesti&oacute;n</a></li>
-			<li><a href="/dashboard">Dashboard</a></li>
-			<li id="out">
-				<button>Logout</button>
-			</li>
+			{
+				role === 'authenticated' && (
+					<>
+						<li>
+							<a href="/compra">Venta</a>
+						</li>
+						<li>
+							<a href="/inventario">Inventario</a>
+						</li>
+						<li>
+							<a href="/ganancias">Ganancias</a>
+						</li>
+						<li>
+							<a href="/inventario/gestion">Gesti&oacute;n</a>
+						</li>
+						<li>
+							<a href="/dashboard">Dashboard</a>
+						</li>
+						<li>
+							<a href="/crear-usuario">Crear usuario</a>
+						</li>
+						<li id="out">
+							<button>logout</button>
+						</li>
+					</>
+				)
+			}
+			{
+				role === 'vendedor' && (
+					<>
+						<li>
+							<a href="/compra">Venta</a>
+						</li>
+						<li>
+							<a href="/inventario/gestion">Gesti&oacute;n</a>
+						</li>
+						<li id="out">
+							<button>logout</button>
+						</li>
+					</>
+				)
+			}
+			{
+				role === 'contador' && (
+					<>
+						<li>
+							<a href="/inventario">Inventario</a>
+						</li>
+						<li>
+							<a href="/ganancias">Ganancias</a>
+						</li>
+
+						<li>
+							<a href="/dashboard">Dashboard</a>
+						</li>
+
+						<li id="out">
+							<button>logout</button>
+						</li>
+					</>
+				)
+			}
 		</ul>
 	</div>
 </nav>

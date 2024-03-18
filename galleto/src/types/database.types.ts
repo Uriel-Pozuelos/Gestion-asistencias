@@ -99,6 +99,24 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          email: string | null
+          id: number
+          role: Database["public"]["Enums"]["role"] | null
+        }
+        Insert: {
+          email?: string | null
+          id?: number
+          role?: Database["public"]["Enums"]["role"] | null
+        }
+        Update: {
+          email?: string | null
+          id?: number
+          role?: Database["public"]["Enums"]["role"] | null
+        }
+        Relationships: []
+      }
       usuarios: {
         Row: {
           correo: string | null
@@ -164,7 +182,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      role: "admin" | "contador" | "vendedor"
     }
     CompositeTypes: {
       [_ in never]: never
