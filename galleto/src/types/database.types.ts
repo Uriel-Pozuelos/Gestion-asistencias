@@ -9,6 +9,24 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      codigos: {
+        Row: {
+          codigo: string | null
+          created_at: string
+          id: number
+        }
+        Insert: {
+          codigo?: string | null
+          created_at?: string
+          id?: number
+        }
+        Update: {
+          codigo?: string | null
+          created_at?: string
+          id?: number
+        }
+        Relationships: []
+      }
       galletas: {
         Row: {
           id: number
@@ -117,6 +135,27 @@ export type Database = {
         }
         Relationships: []
       }
+      users: {
+        Row: {
+          email: string | null
+          first_name: string | null
+          id: string
+          last_name: string | null
+        }
+        Insert: {
+          email?: string | null
+          first_name?: string | null
+          id: string
+          last_name?: string | null
+        }
+        Update: {
+          email?: string | null
+          first_name?: string | null
+          id?: string
+          last_name?: string | null
+        }
+        Relationships: []
+      }
       usuarios: {
         Row: {
           correo: string | null
@@ -179,7 +218,31 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_email_from_auth_users:
+        | {
+            Args: {
+              user_email: string
+            }
+            Returns: {
+              email: string
+            }[]
+          }
+        | {
+            Args: {
+              user_id: string
+            }
+            Returns: {
+              email: string
+            }[]
+          }
+      get_user_id_by_email: {
+        Args: {
+          email: string
+        }
+        Returns: {
+          id: string
+        }[]
+      }
     }
     Enums: {
       role: "admin" | "contador" | "vendedor"

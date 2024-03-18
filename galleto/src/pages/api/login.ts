@@ -37,9 +37,11 @@ function validateSafe({
 }
 
 export const POST: APIRoute = async ({ request, redirect }) => {
-	const formData = await request.formData();
-	const username = formData.get('usuario');
-	const password = formData.get('password');
+	const formData = await request.json();
+	const username = formData.email;
+	const password = formData.password;
+
+	console.log(username, password);
 
 	if (!username || !password) {
 		return new Response(
@@ -59,7 +61,7 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 		usuario: username as string,
 		password: password as string
 	});
-	
+
 	if (valid !== true) {
 		return new Response(JSON.stringify(valid), {
 			status: 400,
@@ -68,19 +70,10 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 			}
 		});
 	}
-
-	const { error } = await supabase.auth.signInWithOtp({
+	let { error } = await supabase.auth.signInWithPassword({
 		email: username as string,
-		options: { 
-			emailRedirectTo: '/home',
-			shouldCreateUser: false
-		}
+		password: password as string
 	});
-
-	// let { error } = await supabase.auth.signInWithPassword({
-	// 	email: username as string,
-	// 	password: password as string
-	// });
 
 	if (error) {
 		return new Response(
