@@ -5,6 +5,7 @@ import { useState } from 'react';
 import adminAuthClient from '@/db/admin';
 import { tr } from 'date-fns/locale';
 import supabase from '@/db';
+import { set } from 'date-fns';
 
 function FormLogin() {
 	const [errors, setErrors] = useState({
@@ -181,6 +182,7 @@ function FormLogin() {
 					{message && (
 						<p className="text-red-500 text-sm">{message}</p>
 					)}
+
 					<Button
 						variant="secondary"
 						size="lg"
@@ -188,6 +190,14 @@ function FormLogin() {
 						type="button"
 						onClick={handleCode}>
 						Aceptar
+					</Button>
+
+					<Button
+						variant="secondary"
+						size="lg"
+						className="self-center my-5"
+						onClick={() => setResetPassword(false)}>
+						Regresar a Inicio de Sesión
 					</Button>
 				</div>
 			)}
