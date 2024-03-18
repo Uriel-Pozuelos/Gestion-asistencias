@@ -43,9 +43,11 @@ interface ModalCompraProps {
 
 function Tickets() {
 	const { lastListaGalletas } = useVentaStore();
-	console.log({
-		lastListaGalletas
-	});
+	// const { listaGalletas } = useVentaStore();
+	// console.log({
+	// 	lastListaGalletas
+	// });
+	// console.log('listagalletas', {listaGalletas});
 	return (
 		<table id="historial_facturacion" style={{ display: 'none' }}>
 			<thead>
@@ -104,6 +106,7 @@ function ModalCompra({ pathname }: ModalCompraProps) {
 	const { toast } = useToast();
 
 	const { listaGalletas } = useVentaStore();
+	// console.log("list",{ listaGalletas });
 
 	const handleVenta = async () => {
 		try {
@@ -137,7 +140,7 @@ function ModalCompra({ pathname }: ModalCompraProps) {
 						.eq('id', galleta.id);
 
 					const data = await saveVenta(galleta);
-					console.log({ data });
+					// console.log({ data });
 
 					if (error) {
 						toast({
@@ -156,10 +159,10 @@ function ModalCompra({ pathname }: ModalCompraProps) {
 						return data;
 					}
 				} else {
-					console.log(
-						'No se encontró ninguna galleta con el ID:',
-						galleta.id
-					);
+					// console.log(
+					// 	'No se encontró ninguna galleta con el ID:',
+					// 	galleta.id
+					// );
 					return Promise.reject(
 						`No se encontró ninguna galleta con el ID: ${galleta.id}`
 					);
@@ -176,7 +179,7 @@ function ModalCompra({ pathname }: ModalCompraProps) {
 
 				console.log(
 					'Antes de actualizar listaGalletas:',
-					listaGalletas
+					{listaGalletas}
 				);
 
 				// Guardar la última lista de galletas vendidas
@@ -329,18 +332,18 @@ function ModalCompra({ pathname }: ModalCompraProps) {
 
 					<DialogFooter>
 						<DialogClose asChild>
-							<Button className="w-1/2 mx-2" onClick={handleExport}>
+							<Button className="w-full mx-2" onClick={handleExport}>
 								Ticket
 							</Button>
 						</DialogClose>
-						<DialogClose asChild>
+						{/* <DialogClose asChild>
 							<Button
 								type="button"
 								className="w-1/2 mx-2"
 								variant={'outline_primary'}>
 								Factura
 							</Button>
-						</DialogClose>
+						</DialogClose> */}
 					</DialogFooter>
 					<Tickets />
 				</DialogContent>

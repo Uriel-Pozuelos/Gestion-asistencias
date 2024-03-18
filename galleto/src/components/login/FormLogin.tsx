@@ -10,6 +10,9 @@ function FormLogin() {
 	});
 	const [message, setMessage] = useState('');
 
+	const [resetPassword, setResetPassword] = useState<boolean>(false);
+	const [success, setSuccess] = useState<boolean>(false);
+
 	const handleSubmit = async (
 		e: React.FormEvent<HTMLFormElement>
 	) => {
@@ -46,11 +49,17 @@ function FormLogin() {
 		}
 	};
 
-	return (
-		<>
+	const sendResetPassword = async () => {
+		
+	};
+
+
+
+	return <>
+			{!resetPassword && 
 			<form onSubmit={handleSubmit} className="w-full">
 				<div className="my-5 text-center">
-					<label>Usuario</label>
+					<label>Correo</label>
 					<Input type="text" name="usuario" className="bg-white" />
 				</div>
 				<div>
@@ -83,9 +92,28 @@ function FormLogin() {
 						Ingresar
 					</Button>
 				</div>
-			</form>
-		</>
-	);
+			</form>}
+			{resetPassword && <div className="grid gap-4">
+				<div className="my-5 text-center">
+					<label>Correo</label>
+					<Input type="text" name="usuario" className="bg-white"  placeholder='Email de inicio de sesión'/>
+				</div>
+				{success && <div className='bg-green-100 text-green-600 px-2 rounded'>
+					Correo enviado con éxito, revisa tu bandeja de entrada para restablecer tu contraseña
+				</div>}
+				<Button
+					variant="secondary"
+					size="lg"
+					className="self-center my-5"
+					onClick={sendResetPassword}>
+					Enviar correo de recuperación
+				</Button>
+			</div>}
+			<span className='cursor-pointer hover:underline flex justify-center w-full' onClick={() => setResetPassword(!resetPassword)}>
+				{resetPassword ? 'Login' : 'Restablecer contraseña'}
+			</span>
+			
+	</>
 }
 
 export default FormLogin;
