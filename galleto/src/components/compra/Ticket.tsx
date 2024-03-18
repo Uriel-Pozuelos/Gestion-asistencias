@@ -3,7 +3,8 @@ import {
 	Text,
 	View,
 	Document,
-	StyleSheet
+	StyleSheet,
+	Tspan
 } from '@react-pdf/renderer';
 import { useVentaStore } from '@/store/ventaStore';
 
@@ -36,7 +37,7 @@ function Ticket() {
 						<Text>{galleta.typeVenta}</Text>
 					</View>
 				))}
-				<Tspan className="text-right">
+				<Tspan>
 					<Text >
 						Total:{' '}
 						{lastListaGalletas.reduce(

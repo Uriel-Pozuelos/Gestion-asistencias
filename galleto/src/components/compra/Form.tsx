@@ -118,7 +118,7 @@ export function RadioGroupForm() {
 		}
 
 		if (!isUpdate) {
-			console.log('añadir');
+			// console.log('añadir');
 			console.log(jsonTotal);
 			setListaGalletas([
 				...useVentaStore.getState().listaGalletas,
@@ -314,7 +314,7 @@ export function RadioGroupForm() {
 					</Label>
 				</div>
 
-				<div className="lg:flex lg:grid lg:grid-rows-1 lg:grid-cols-2 lg:w-full lg:space-x-4 sm:grid sm:grid-cols-1 md:flex md:w-full sm:space-y-2 md:space-y-0">
+				<div className="lg:grid lg:grid-rows-1 lg:grid-cols-2 lg:w-full lg:space-x-4 sm:grid sm:grid-cols-1 md:flex md:w-full sm:space-y-2 md:space-y-0">
 					{isUpdate ? (
 						<Button className="" type="submit">
 							Actualizar{' '}

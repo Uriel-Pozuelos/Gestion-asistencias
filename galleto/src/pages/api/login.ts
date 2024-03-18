@@ -59,6 +59,7 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 		usuario: username as string,
 		password: password as string
 	});
+	
 	if (valid !== true) {
 		return new Response(JSON.stringify(valid), {
 			status: 400,
@@ -68,10 +69,18 @@ export const POST: APIRoute = async ({ request, redirect }) => {
 		});
 	}
 
-	let { error } = await supabase.auth.signInWithPassword({
+	const { error } = await supabase.auth.signInWithOtp({
 		email: username as string,
-		password: password as string
+		options: { 
+			emailRedirectTo: '/home',
+			shouldCreateUser: false
+		}
 	});
+
+	// let { error } = await supabase.auth.signInWithPassword({
+	// 	email: username as string,
+	// 	password: password as string
+	// });
 
 	if (error) {
 		return new Response(
